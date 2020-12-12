@@ -14,7 +14,7 @@ pipeline {
             steps {
                 step([$class: 'WsCleanup'])
                 checkout([$class: 'GitSCM',
-                          branches: [[name: 'refs/heads/master']],
+                          branches: [[name: 'refs/heads/202012-centec-pre']],
                           extensions: [[$class: 'SubmoduleOption',
                                         disableSubmodules: false,
                                         parentCredentials: false,
@@ -33,11 +33,11 @@ pipeline {
 
 git submodule foreach --recursive '[ -f .git ] && echo "gitdir: $(realpath --relative-to=. $(cut -d" " -f2 .git))" > .git'
 
-make configure PLATFORM=centec-arm64 PLATFORM_ARCH=arm64 NOSTRETCH=1
-make SONIC_BUILD_JOBS=4 INSTALL_DEBUG_TOOLS=y NOSTRETCH=1 target/sonic-centec.bin
+make configure PLATFORM=centec-arm64 PLATFORM_ARCH=arm64
+make SONIC_BUILD_JOBS=4 INSTALL_DEBUG_TOOLS=y target/sonic-centec.bin
 mv target/sonic-centec.bin target/sonic-centec-dbg.bin
-make SONIC_BUILD_JOBS=4 NOSTRETCH=1 target/sonic-centec.bin
-make SONIC_BUILD_JOBS=4 ENABLE_SYNCD_RPC=y NOSTRETCH=1 target/docker-syncd-centec-rpc.gz
+make SONIC_BUILD_JOBS=4 target/sonic-centec.bin
+make SONIC_BUILD_JOBS=4 ENABLE_SYNCD_RPC=y target/docker-syncd-centec-rpc.gz
 '''
             }
         }
