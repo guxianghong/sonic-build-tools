@@ -30,15 +30,13 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''#!/bin/bash -xe
-
-git submodule foreach --recursive '[ -f .git ] && echo "gitdir: $(realpath --relative-to=. $(cut -d" " -f2 .git))" > .git'
-
-make configure PLATFORM=centec-arm64 PLATFORM_ARCH=arm64 NOJESSIE=1
-make SONIC_BUILD_JOBS=4 INSTALL_DEBUG_TOOLS=y NOJESSIE=1 target/sonic-centec.bin
-mv target/sonic-centec.bin target/sonic-centec-dbg.bin
-make SONIC_BUILD_JOBS=4 NOJESSIE=1 target/sonic-centec.bin
-make SONIC_BUILD_JOBS=4 ENABLE_SYNCD_RPC=y NOJESSIE=1 target/docker-syncd-centec-rpc.gz
-'''
+                      git submodule foreach --recursive '[ -f .git ] && echo "gitdir: $(realpath --relative-to=. $(cut -d" " -f2 .git))" > .git'
+                      make configure PLATFORM=centec-arm64 PLATFORM_ARCH=arm64 NOJESSIE=1
+                      make SONIC_BUILD_JOBS=4 INSTALL_DEBUG_TOOLS=y NOJESSIE=1 target/sonic-centec-arm64.bin
+                      mv target/sonic-centec-arm64.bin target/sonic-centec-dbg.bin
+                      make SONIC_BUILD_JOBS=4 NOJESSIE=1 target/sonic-centec-arm64.bin
+                      make SONIC_BUILD_JOBS=4 ENABLE_SYNCD_RPC=y NOJESSIE=1 target/docker-syncd-centec-rpc.gz
+                      '''
             }
         }
 
